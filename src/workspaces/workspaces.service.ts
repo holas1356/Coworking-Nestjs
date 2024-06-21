@@ -76,7 +76,7 @@ export class WorkspacesService {
       throw new NotFoundException(`Workspace with ID ${id} not found`);
     }
 
-    await this.workspaceRepository.softDelete({ workspace_id: id });
+    await this.workspaceRepository.delete({ workspace_id: id });
 
     return workspaceToRemove;
   }

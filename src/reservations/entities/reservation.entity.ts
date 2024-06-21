@@ -1,4 +1,3 @@
-// reservation.entity.ts
 
 import { Sessions } from 'src/sessions/entities/session.entity';
 import { Users } from 'src/users/entities/user.entity';
