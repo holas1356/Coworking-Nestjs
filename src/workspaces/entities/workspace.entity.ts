@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Reservations } from 'src/reservations/entities/reservation.entity';
 import { Rooms } from 'src/rooms/entities/room.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique, OneToMany } from 'typeorm';
 
 
 @Entity()
@@ -33,4 +34,7 @@ export class Workspaces {
   @ApiProperty()
   @Column('boolean', { default: false })
   has_power_outlet: boolean;
+
+  @OneToMany(() => Reservations, reservation => reservation.workspace)
+  reservations: Reservations[];
 }

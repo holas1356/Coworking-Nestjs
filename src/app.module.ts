@@ -7,6 +7,7 @@ import { RoomsModule } from './rooms/rooms.module';
 import { Rooms } from './rooms/entities/room.entity';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { SessionsModule } from './sessions/sessions.module';
     UsersModule,
     RoomsModule,
     WorkspacesModule,
-    SessionsModule],
+    SessionsModule,
+    ReservationsModule],
   controllers: [],
   providers: [],
 })

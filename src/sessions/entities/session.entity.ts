@@ -1,6 +1,7 @@
 // session.entity.ts
 
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Reservations } from 'src/reservations/entities/reservation.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class Sessions {
@@ -18,4 +19,7 @@ export class Sessions {
 
   @Column({ nullable: true })
   max_capacity: number;
+
+  @OneToMany(() => Reservations, reservation => reservation.session)
+  reservations: Reservations[];
 }
