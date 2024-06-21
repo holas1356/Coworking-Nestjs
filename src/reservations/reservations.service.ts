@@ -3,7 +3,7 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reservations } from './entities/reservation.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Users } from 'src/users/entities/user.entity';
 import { Workspaces } from 'src/workspaces/entities/workspace.entity';
 import { Sessions } from 'src/sessions/entities/session.entity';
@@ -30,7 +30,6 @@ export class ReservationsService {
       throw new NotFoundException(`Workspace with ID ${workspace_id} not found`);
     }
 
-    // Verificar si la sesión existe
     const session = await this.sessionsRepository.findOneBy({session_id});
     if (!session) {
       throw new NotFoundException(`Session with ID ${session_id} not found`);
