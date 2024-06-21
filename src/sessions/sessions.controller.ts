@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SessionsService } from './sessions.service';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { UpdateSessionDto } from './dto/update-session.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('sessions')
 @Controller('sessions')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
@@ -18,17 +20,17 @@ export class SessionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.sessionsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSessionDto: UpdateSessionDto) {
-    return this.sessionsService.update(+id, updateSessionDto);
+  update(@Param('id') id: number, @Body() updateSessionDto: UpdateSessionDto) {
+    return this.sessionsService.update(id, updateSessionDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.sessionsService.remove(+id);
   }
 }
