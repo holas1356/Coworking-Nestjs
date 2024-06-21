@@ -14,6 +14,37 @@ export class SessionsService {
     const newSession = this.sessionsRepository.create(createSessionDto);
     return this.sessionsRepository.save(newSession);
   }
+
+  /*View the sessions in order of the busiest.*/
+  async findSessionsOrderedByOccupancy() {
+    const query = `
+      SELECT s.session_id, s.session_name, s.start_time, s.end_time, s.max_capacity,
+             COUNT(r.reservation_id) AS total_persons
+      FROM Sessions s
+      LEFT JOIN Reservations r ON s.session_id = r.session_id AND r.status = 'confirmed'
+      GROUP BY s.session_id, s.session_name, s.start_time, s.end_time, s.max_capacity
+      ORDER BY total_persons DESC;
+    `;
+    
+    const sessions = await this.sessionsRepository.query(query);
+    return sessions;
+  }
+
+
+  /*View the sessions in order by the most available.*/
+  async findSessionsOrderedByAvailability() {
+    const query = `
+      SELECT s.session_id, s.session_name, s.start_time, s.end_time, s.max_capacity,
+             s.max_capacity - COUNT(r.reservation_id) AS available_capacity
+      FROM Sessions s
+      LEFT JOIN Reservations r ON s.session_id = r.session_id AND r.status = 'confirmed'
+      GROUP BY s.session_id, s.session_name, s.start_time, s.end_time, s.max_capacity
+      ORDER BY available_capacity DESC;
+    `;
+    
+    const sessions = await this.sessionsRepository.query(query);
+    return sessions;
+  }
   async findAll() {
     return this.sessionsRepository.find();
   }

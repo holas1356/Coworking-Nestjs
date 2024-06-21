@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
 import { WorkspacesService } from './workspaces.service';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
@@ -14,6 +14,23 @@ export class WorkspacesController {
     return this.workspacesService.create(createWorkspaceDto);
   }
 
+  @Get('available/:sessionId')
+  async getAvailableWorkspaces(@Param('sessionId') sessionId: number){
+    return this.workspacesService.findAvailableWorkspaces(sessionId);
+  }
+
+  @Get('occupied/:sessionId')
+  async getOccupiedWorkspaces(@Param('sessionId') sessionId: number){
+    return this.workspacesService.findOccupiedWorkspaces(sessionId);
+  }
+  @Get('user/:userId')
+  async getWorkspacesByUserId(@Param('userId') userId: number) {
+    return this.workspacesService.findWorkspacesByUserId(userId);
+  }
+  @Get('session/:sessionId')
+  async getWorkspacesBySessionId(@Param('sessionId') sessionId: number) {
+    return this.workspacesService.findWorkspacesBySessionId(sessionId);
+  }
   @Get()
   findAll() {
     return this.workspacesService.findAll();

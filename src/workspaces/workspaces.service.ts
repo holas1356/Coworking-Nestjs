@@ -5,13 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Workspaces } from './entities/workspace.entity';
 import { Repository } from 'typeorm';
 import { Rooms } from 'src/rooms/entities/room.entity';
+import { Users } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class WorkspacesService {
 
   constructor(
     @InjectRepository(Workspaces) private readonly workspaceRepository:Repository<Workspaces>,
-    @InjectRepository(Rooms) private readonly roomsRepository: Repository<Rooms>
+    @InjectRepository(Rooms) private readonly roomsRepository: Repository<Rooms>,
+    @InjectRepository(Users) private readonly usersRepository: Repository<Users>
   ){}
   async create(createWorkspaceDto: CreateWorkspaceDto) {
     const { room_id } = createWorkspaceDto;
@@ -28,6 +30,68 @@ export class WorkspacesService {
     return this.workspaceRepository.save(newWorkspace);
   }
 
+
+  /*View the list of available workspaces for a room in a
+session x.*/
+  async findAvailableWorkspaces(sessionId: number) {
+    const query = `
+      SELECT w.workspace_id, w.row_number, w.column_number, w.workspace_type, w.has_power_outlet
+      FROM Workspaces w
+      LEFT JOIN Reservations r ON w.workspace_id = r.workspace_id
+      WHERE r.session_id = $1
+        AND (r.reservation_id IS NULL OR r.status = 'cancelled');
+    `;
+    
+    const availableWorkspaces = await this.workspaceRepository.query(query, [sessionId]);
+    return availableWorkspaces;
+  }
+
+
+  /*View the list of occupied workspaces for a room in a
+session x.*/
+  async findOccupiedWorkspaces(sessionId: number) {
+    const query = `
+      SELECT w.workspace_id, w.row_number, w.column_number, w.workspace_type, w.has_power_outlet
+      FROM Workspaces w
+      LEFT JOIN Reservations r ON w.workspace_id = r.workspace_id
+      WHERE r.session_id = $1
+        AND r.status = 'confirmed';
+    `;
+    
+    const occupiedWorkspaces = await this.workspaceRepository.query(query, [sessionId]);
+    return occupiedWorkspaces;
+  }
+
+
+  /*View the list of workspaces assigned to a user.*/
+  async findWorkspacesByUserId(userId: number): Promise<any[]> {
+    const query = `
+      SELECT u.user_id, u.username, w.workspace_id, w.row_number, w.column_number, w.workspace_type
+      FROM Users u
+      JOIN Reservations r ON u.user_id = r.user_id
+      JOIN Workspaces w ON r.workspace_id = w.workspace_id
+      WHERE u.user_id = $1;
+    `;
+    
+    const workspaces = await this.workspaceRepository.query(query, [userId]);
+    return workspaces;
+  }
+
+
+  /*View the list of workspaces assigned to a session.*/
+  async findWorkspacesBySessionId(sessionId: number) {
+    const query = `
+      SELECT s.session_id, s.session_name, w.workspace_id, w.row_number, w.column_number, w.workspace_type
+      FROM Sessions s
+      JOIN Reservations r ON s.session_id = r.session_id
+      JOIN Workspaces w ON r.workspace_id = w.workspace_id
+      WHERE s.session_id = $1;
+    `;
+    
+    const workspaces = await this.workspaceRepository.query(query, [sessionId]);
+    return workspaces;
+  }
+  
   async findAll() {
     return this.workspaceRepository
     .createQueryBuilder('workspace')

@@ -14,6 +14,15 @@ export class SessionsController {
     return this.sessionsService.create(createSessionDto);
   }
 
+  @Get('most-occupied')
+  async getSessionsOrderedByOccupancy() {
+    return this.sessionsService.findSessionsOrderedByOccupancy();
+  }
+
+  @Get('most-available')
+  async getSessionsOrderedByAvailability() {
+    return this.sessionsService.findSessionsOrderedByAvailability();
+  }
   @Get()
   findAll() {
     return this.sessionsService.findAll();
