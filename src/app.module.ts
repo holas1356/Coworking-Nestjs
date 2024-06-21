@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {  Users } from './users/entities/user.entity';
 import { RoomsModule } from './rooms/rooms.module';
+import { Rooms } from './rooms/entities/room.entity';
 
 @Module({
   imports: [
