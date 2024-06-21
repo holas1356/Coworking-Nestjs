@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Rooms } from 'src/rooms/entities/room.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, Unique } from 'typeorm';
 
@@ -8,22 +9,28 @@ export class Workspaces {
   @PrimaryGeneratedColumn()
   workspace_id: number;
 
+  @ApiProperty()
   @Column('int')
   room_id: number;
 
+  @ApiProperty()
   @ManyToOne(() => Rooms, room => room.workspaces)
   @JoinColumn({ name: 'room_id' })
   room: Rooms;
 
+  @ApiProperty()
   @Column('int')
   row_number: number;
 
+  @ApiProperty()
   @Column('int')
   column_number: number;
 
+  @ApiProperty()
   @Column({ length: 50, nullable: true })
   workspace_type: string;
 
+  @ApiProperty()
   @Column('boolean', { default: false })
   has_power_outlet: boolean;
 }
