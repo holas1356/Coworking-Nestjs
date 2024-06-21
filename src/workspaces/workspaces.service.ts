@@ -64,7 +64,7 @@ session x.*/
 
 
   /*View the list of workspaces assigned to a user.*/
-  async findWorkspacesByUserId(userId: number): Promise<any[]> {
+  async findWorkspacesByUserId(userId: number){
     const query = `
       SELECT u.user_id, u.username, w.workspace_id, w.row_number, w.column_number, w.workspace_type
       FROM Users u
